@@ -11,6 +11,6 @@
   "scripts": {
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "release": "echo @unmini/shared noneed release"
+    "release": "echo @wocat/shared noneed release"
   }
 }

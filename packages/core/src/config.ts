@@ -17,6 +17,10 @@ export async function loadConfig<T extends Config = Config>(
 
 export const defaultConfig: Config = {
   patterns: [],
+  // TODO: add more features
+  // interactive: false,
+  // over: '2',
+  // all: false,
 }
 
 export function resolveConfig(...configs: Config[]): ResolvedConfig {
@@ -51,12 +55,39 @@ export interface Config {
    * @default process.cwd()
    */
   cwd?: string
+  // TODO: add more features
+  // /**
+  //  * whether to run in interactive mode
+  //  *
+  //  * 是否运行在交互模式
+  //  *
+  //  * @default false
+  //  */
+  // interactive?: boolean
+  // /**
+  //  * Only select dependencies that are over a specific number
+  //  *
+  //  * 只选择超过特定数量的依赖
+  //  *
+  //  * @default '2'
+  //  */
+  // over?: string
+  // /**
+  //  * Select all dependencies, even if they are already cataloged
+  //  *
+  //  * 选择所有依赖，即使它们已经被编目
+  //  *
+  //  * @default false
+  //  */
+  // all?: boolean
 }
 
 export interface ResolvedConfig extends SetRequiredDeep<
   Config,
   | 'patterns'
   | 'cwd'
+  // TODO: add more features
+  // | 'interactive' | 'over' | 'all'
 > {
   /**
    * whether the config has been resolved
