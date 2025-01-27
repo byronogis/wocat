@@ -1,7 +1,7 @@
 {
   "name": "@wocat/cli",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "CLI for wocat",
   "author": "Byron <byronogis@outlook.com>",
   "license": "MIT",
