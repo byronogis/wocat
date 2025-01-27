@@ -1,0 +1,6 @@
+{
+  "extends": "@wocat/typescript-config/tsconfig.base.json",
+  "include": [
+    "src"
+  ]
+}

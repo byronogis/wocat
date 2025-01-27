@@ -1,0 +1,47 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "transit": {
+      "dependsOn": ["^transit"]
+    },
+    "dev": {
+      "cache": false
+    },
+    "playground#dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^dev"]
+    },
+    "playground#build": {
+      "dependsOn": ["^build"]
+    },
+    "playground#typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "@wocat/cli#build": {
+      "dependsOn": ["^build"]
+    },
+    "@wocat/cli#typecheck": {
+      "dependsOn": ["build"]
+    },
+    "build": {
+      "dependsOn": ["^build", "typecheck"]
+    },
+    "test": {
+      "dependsOn": ["^transit"]
+    },
+    "automd": {
+      "dependsOn": ["^transit"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "clear": {
+      "dependsOn": ["^transit"]
+    },
+    "//#root:lint": { },
+    "//#root:lint:fix": { }
+
+  },
+  "ui": "tui"
+}

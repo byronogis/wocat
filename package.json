@@ -1,0 +1,51 @@
+{
+  "name": "@wocat/monorepo",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "description": "Convert regular dependencies to Catalogs.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/byronogis/wocat.git"
+  },
+  "scripts": {
+    "dev": "turbo run dev --filter='./packages/*'",
+    "build": "turbo run build --filter='./packages/*'",
+    "build:full": "turbo run build",
+    "automd": "turbo run automd && pnpm run root:automd",
+    "release": "bumpp -r && pnpm run -r release",
+    "root:automd": "automd --input='README*.md'",
+    "root:lint": "eslint .",
+    "root:lint:fix": "eslint . --fix",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "clear": "pnpx turbo run clear && pnpx rimraf -g '**/node_modules' '**/.turbo' '**/coverage'",
+    "prepare": "simple-git-hooks"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.1.0",
+    "@types/node": "^22.10.10",
+    "@vitest/coverage-v8": "^3.0.4",
+    "@wocat/cli": "workspace:*",
+    "@wocat/shared": "workspace:*",
+    "@wocat/typescript-config": "workspace:*",
+    "automd": "^0.3.12",
+    "bumpp": "^10.0.1",
+    "eslint": "^9.19.0",
+    "jiti": "^2.4.2",
+    "lint-staged": "^15.4.3",
+    "rimraf": "^6.0.1",
+    "simple-git-hooks": "^2.11.1",
+    "turbo": "latest",
+    "typescript": "^5.7.3",
+    "unbuild": "^3.3.1",
+    "vitest": "^3.0.4"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
+}

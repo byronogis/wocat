@@ -1,0 +1,9 @@
+{
+  "name": "@wocat/typescript-config",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "release": "echo @wocat/typescript-config noneed release"
+  }
+}
