@@ -124,6 +124,17 @@ export class CoreContext {
         })
       })
     })
+
+    /**
+     * Remove dependencies that less than the specified count
+     *
+     * 移除小于指定数量的依赖
+     */
+    this.#deps.forEach((dep) => {
+      if (dep.scoped.length < Number(this.config.min)) {
+        this.#deps.delete(dep.id)
+      }
+    })
   }
 
   /**

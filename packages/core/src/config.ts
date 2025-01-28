@@ -19,7 +19,7 @@ export const defaultConfig: Config = {
   patterns: [],
   // TODO: add more features
   // interactive: false,
-  // over: '2',
+  min: '1',
   // all: false,
 }
 
@@ -64,14 +64,14 @@ export interface Config {
   //  * @default false
   //  */
   // interactive?: boolean
-  // /**
-  //  * Only select dependencies that are over a specific number
-  //  *
-  //  * 只选择超过特定数量的依赖
-  //  *
-  //  * @default '2'
-  //  */
-  // over?: string
+  /**
+   * Only select dependencies greater than or equal to the specified count
+   *
+   * 只选择超过特定数量的依赖
+   *
+   * @default '1'
+   */
+  min?: string
   // /**
   //  * Select all dependencies, even if they are already cataloged
   //  *
@@ -87,7 +87,9 @@ export interface ResolvedConfig extends SetRequiredDeep<
   | 'patterns'
   | 'cwd'
   // TODO: add more features
-  // | 'interactive' | 'over' | 'all'
+  // | 'interactive'
+  | 'min'
+  // | 'all'
 > {
   /**
    * whether the config has been resolved

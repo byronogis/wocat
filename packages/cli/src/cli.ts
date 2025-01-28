@@ -21,12 +21,12 @@ const main = defineCommand({
     //   alias: 'I',
     //   default: false,
     // },
-    // over: {
-    //   type: 'string',
-    //   description: 'Only select dependencies that are over a specific number',
-    //   alias: 'O',
-    //   default: '2',
-    // },
+    min: {
+      type: 'string',
+      description: 'Ony select dependencies greater than or equal to the specified count',
+      alias: 'm',
+      default: '1',
+    },
     // all: {
     //   type: 'boolean',
     //   description: 'Select all dependencies, even if they are already cataloged',
