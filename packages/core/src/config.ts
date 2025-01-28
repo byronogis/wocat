@@ -20,7 +20,6 @@ export const defaultConfig: Config = {
   // TODO: add more features
   // interactive: false,
   min: '1',
-  // all: false,
 }
 
 export function resolveConfig(...configs: Config[]): ResolvedConfig {
@@ -89,7 +88,6 @@ export interface ResolvedConfig extends SetRequiredDeep<
   // TODO: add more features
   // | 'interactive'
   | 'min'
-  // | 'all'
 > {
   /**
    * whether the config has been resolved

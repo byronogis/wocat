@@ -27,12 +27,6 @@ const main = defineCommand({
       alias: 'm',
       default: '1',
     },
-    // all: {
-    //   type: 'boolean',
-    //   description: 'Select all dependencies, even if they are already cataloged',
-    //   alias: 'A',
-    //   default: false,
-    // },
     watch: {
       type: 'boolean',
       description: 'Watch mode',
