@@ -17,9 +17,7 @@ export async function core(_options: CoreOptions): Promise<CoreReturns> {
 
   // await options.ctx.hooks.callHook('event:core:start', options)
 
-  options.ctx.init(options)
-
-  return options.ctx.run()
+  return options.ctx.run(options)
 }
 
 export interface CoreOptions {

@@ -17,10 +17,10 @@ const CATALOG_DEFAULT = 'default'
 export class CoreContext {
   config: ResolvedConfig
   hooks: Hookable<Hooks>
-  options?: CoreOptions
-  parsedConfigFile?: ParsedYAMLFile
-  parsedPackageFiles?: Map<FileItem['id'], ParsedJSONFile>
-  deps: Map<DepItem['id'], DepItem> = new Map()
+  #payload?: CoreOptions
+  #deps: Map<DepItem['id'], DepItem> = new Map()
+  #parsedConfigFile?: ParsedYAMLFile
+  #parsedPackageFiles?: Map<FileItem['id'], ParsedJSONFile>
 
   constructor(options: ContextOptions) {
     const _configs = [options.configs].flat(2)
@@ -36,31 +36,29 @@ export class CoreContext {
     return `${name}:${value}`
   }
 
-  init(options: CoreOptions): void {
-    this.options = options
-    this.parsedConfigFile = {
+  run(options: CoreOptions): CoreReturns {
+    this.#payload = options
+    this.#parsedConfigFile = {
       ...options.configFile,
       parsedContent: parseYAML(options.configFile.content),
     }
-    this.parsedPackageFiles = new Map(options.packageFiles.map((file) => {
+    this.#parsedPackageFiles = new Map(options.packageFiles.map((file) => {
       const parsedContent = parseJSON<PackageJson>(file.content)
       return [file.id, { ...file, parsedContent }]
     }))
-  }
 
-  run(): CoreReturns {
     this.#generateDeps()
 
-    this.#resolveDeps()
+    this.#resolveCatalog()
 
     this.#updateParsedFiles()
 
     return {
       configFile: {
-        ...this.options!.configFile,
-        content: stringifyYAML(this.parsedConfigFile!.parsedContent),
+        ...this.#payload!.configFile,
+        content: stringifyYAML(this.#parsedConfigFile!.parsedContent),
       },
-      packageFiles: Array.from(this.parsedPackageFiles!.values()).map((file) => {
+      packageFiles: Array.from(this.#parsedPackageFiles!.values()).map((file) => {
         return {
           ...file,
           content: stringifyJSON(file.parsedContent),
@@ -69,12 +67,17 @@ export class CoreContext {
     }
   }
 
+  /**
+   * Generate dependency information from package files
+   *
+   * 从包文件中生成依赖信息
+   */
   #generateDeps(): void {
-    if (!(this.parsedConfigFile && this.parsedPackageFiles)) {
+    if (!(this.#parsedConfigFile && this.#parsedPackageFiles)) {
       throw new CoreError('[@wocat/core] Please call init() first')
     }
 
-    this.parsedPackageFiles.forEach(({ parsedContent: pkg, id }) => {
+    this.#parsedPackageFiles.forEach(({ parsedContent: pkg, id }) => {
       if (!pkg.name) {
         throw new CoreError(`[@wocat/core] package.json must have a name field, check ${id}`)
       }
@@ -99,18 +102,18 @@ export class CoreContext {
           }
 
           const depId = this.generateDepId({ value, name })
-          const isExsit = this.deps?.has(depId)
+          const isExsit = this.#deps?.has(depId)
           const scopedItem = {
             file: id,
             name: pkg.name!,
             type: type as DepItem['scoped'][number]['type'],
           }
           if (isExsit) {
-            this.deps.get(depId)!.scoped.push(scopedItem)
+            this.#deps.get(depId)!.scoped.push(scopedItem)
             return
           }
 
-          this.deps.set(depId, {
+          this.#deps.set(depId, {
             id: depId,
             name,
             value,
@@ -123,8 +126,19 @@ export class CoreContext {
     })
   }
 
-  #resolveDeps(): void {
-    const depsByName = groupBy(Array.from(this.deps.values()), i => i.name)
+  /**
+   * Resolve [Catalog](https://pnpm.io/catalogs) information
+   *
+   * Select the latest version as the [Default Catalog](https://pnpm.io/catalogs#default-catalog),
+   * other versions are put into [Named Catalogs](https://pnpm.io/catalogs#named-catalog) as `name:version`
+   *
+   * 处理 [Catalog](https://pnpm.io/catalogs) 信息
+   *
+   * 选取最新的版本作为 [Default Catalog](https://pnpm.io/catalogs#default-catalog),
+   * 其他版本以 `名称:版本` 放入 [Named Catalogs](https://pnpm.io/catalogs#named-catalogs)
+   */
+  #resolveCatalog(): void {
+    const depsByName = groupBy(Array.from(this.#deps.values()), i => i.name)
     Object.values(depsByName).filter(i => i.length > 1).forEach((_deps) => {
       const name = _deps[0]!.name
 
@@ -134,9 +148,9 @@ export class CoreContext {
 
       sortedVersions.forEach((v) => {
         const _id = this.generateDepId({ value: v, name })!
-        this.deps.get(_id!)!.catalog = _id
+        this.#deps.get(_id!)!.catalog = _id
       })
-      this.deps.get(this.generateDepId({ value: sortedVersions.at(-1)!, name }))!.catalog = CATALOG_DEFAULT
+      this.#deps.get(this.generateDepId({ value: sortedVersions.at(-1)!, name }))!.catalog = CATALOG_DEFAULT
     })
   }
 
@@ -146,16 +160,16 @@ export class CoreContext {
    * 更新配置文件和包文件的解析内容
    */
   #updateParsedFiles(): void {
-    this.deps.forEach((dep) => {
+    this.#deps.forEach((dep) => {
       if (dep.catalog === CATALOG_DEFAULT) {
-        this.parsedConfigFile!.parsedContent.setIn([`catalog`, `${dep.name}`], dep.value)
+        this.#parsedConfigFile!.parsedContent.setIn([`catalog`, `${dep.name}`], dep.value)
       }
       else {
-        this.parsedConfigFile!.parsedContent.setIn([`catalogs`, `${dep.catalog}`, `${dep.name}`], dep.value)
+        this.#parsedConfigFile!.parsedContent.setIn([`catalogs`, `${dep.catalog}`, `${dep.name}`], dep.value)
       }
 
       dep.scoped.forEach(({ file, type }) => {
-        const pkg = this.parsedPackageFiles!.get(file)!.parsedContent
+        const pkg = this.#parsedPackageFiles!.get(file)!.parsedContent
         pkg[type]![dep.name]! = `catalog:${dep.catalog === CATALOG_DEFAULT ? '' : dep.catalog}`
       })
     })
