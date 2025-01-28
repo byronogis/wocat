@@ -102,15 +102,19 @@ export async function handle(_config: CliConfig): Promise<void> {
     watcher.on('all', async (type, file) => {
       const absolutePath = resolve(config.cwd, file)
 
-      consola.log(`${green(type)} ${dim(file)}`)
-
       if (type.startsWith('unlink')) {
         // unlink: file has been removed
         fileCache.delete(absolutePath)
       }
       else {
+        const newContent = readFileSync(absolutePath, 'utf8')
+        if (newContent === fileCache.get(absolutePath)) {
+          return
+        }
         fileCache.set(absolutePath, readFileSync(absolutePath, 'utf8'))
       }
+
+      consola.log(`${green(type)} ${dim(file)}`)
 
       debouncedBuild()
     })
