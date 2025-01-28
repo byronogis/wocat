@@ -27,6 +27,11 @@ const main = defineCommand({
       alias: 'm',
       default: '1',
     },
+    filter: {
+      type: 'string',
+      description: 'Filter dependencies by name, can use regular expressions',
+      alias: 'f',
+    },
     watch: {
       type: 'boolean',
       description: 'Watch mode',

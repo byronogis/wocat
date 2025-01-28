@@ -101,6 +101,13 @@ export class CoreContext {
             return
           }
 
+          /**
+           * filter dependencies by name
+           */
+          if (this.config.filter && !new RegExp(this.config.filter).test(name)) {
+            return
+          }
+
           const depId = this.generateDepId({ value, name })
           const isExsit = this.#deps?.has(depId)
           const scopedItem = {

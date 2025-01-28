@@ -71,6 +71,12 @@ export interface Config {
    * @default '1'
    */
   min?: string
+  /**
+   * Filter dependencies by name, can use regular expressions
+   *
+   * 通过名称过滤依赖, 可以使用正则表达式
+   */
+  filter?: string
   // /**
   //  * Select all dependencies, even if they are already cataloged
   //  *
