@@ -20,7 +20,7 @@ export async function runInteractive(ctx: CoreContext): Promise<void> {
       labels: {
         name: cyan(dep.name),
         value: dep.value,
-        catalog: yellow(dep.catalog),
+        catalog: yellow(dep.catalog === 'default' ? 'catalog' : `catalogs.${dep.catalog}`),
         ...scopedFlat,
       },
     })
