@@ -127,7 +127,7 @@ export class CoreContext {
             name,
             value,
             scoped: [scopedItem],
-            selected: false,
+            selected: true,
             catalog: CATALOG_DEFAULT,
           })
         })
