@@ -9,10 +9,10 @@
     "clear": "rimraf dist"
   },
   "devDependencies": {
-    "@unocss/reset": "^65.4.3",
-    "unocss": "^65.4.3",
-    "vite": "^6.0.11",
-    "vite-plugin-ejs": "^1.7.0",
+    "@unocss/reset": "catalog:",
+    "unocss": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-ejs": "catalog:",
     "wocat": "workspace:*"
   }
 }

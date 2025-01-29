@@ -54,6 +54,6 @@
     "@wocat/core": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.7.3"
+    "typescript": "catalog:"
   }
 }
