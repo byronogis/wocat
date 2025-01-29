@@ -1,6 +1,6 @@
 # wocat
 
-<!-- automd:badges license codecov bundlephobia packagephobia -->
+<!-- automd:badges name="wocat" license codecov bundlephobia packagephobia -->
 
 [![npm version](https://img.shields.io/npm/v/wocat)](https://npmjs.com/package/wocat)
 [![npm downloads](https://img.shields.io/npm/dm/wocat)](https://npm.chart.dev/wocat)
