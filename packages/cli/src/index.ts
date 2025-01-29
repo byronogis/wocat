@@ -165,7 +165,9 @@ export async function handle(_config: CliConfig): Promise<void> {
       const res = await core(coreOprions)
 
       await Promise.all([res.configFile, ...res.packageFiles].map(async ({ id, content }) => {
-        return writeFileSync(id, content, 'utf8')
+        const isChanged = fileCache.get(id) !== content
+
+        return isChanged ? writeFileSync(id, content, 'utf8') : null
       }))
       // await ctx.hooks.callHook('event:cli:task:end', coreOprions, res)
     }
