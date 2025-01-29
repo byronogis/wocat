@@ -1,3 +1,4 @@
+import type { CoreOptions } from '@wocat/core'
 import type { CliConfig, ResolvedCliConfig } from './types'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import process from 'node:process'
@@ -9,6 +10,7 @@ import { debounce } from 'perfect-debounce'
 import { glob } from 'tinyglobby'
 import { version } from '../package.json'
 import { handleError } from './errors'
+import { runInteractive } from './interactive'
 import { getWatcher } from './watcher'
 
 const name = 'wocat'
@@ -55,6 +57,17 @@ export async function handle(_config: CliConfig): Promise<void> {
   ]
 
   const ctx = new CoreContext({ configs: config })
+
+  ctx.hooks.hook('event:before:update-parsed-files', async (ctx) => {
+    if (!ctx.deps.size) {
+      consola.info('No dependencies need to be converted to catalogs')
+      return
+    }
+
+    if (_config.interactive) {
+      await runInteractive(ctx)
+    }
+  })
 
   // ctx.hooks.hook('event:cli:task:end', (/* options, res */) => {
   //   console.log('[wocat] event:cli:task:end' /* options, res */)
@@ -134,7 +147,7 @@ export async function handle(_config: CliConfig): Promise<void> {
   async function task(ctx: CoreContext): Promise<void> {
     const sourceCache = Array.from(fileCache).map(([id, content]) => ({ id, content }))
 
-    const coreOprions = {
+    const coreOprions: CoreOptions = {
       ctx,
       configFile: {
         ...sourceCache.find(({ id }) => id.endsWith(configurationFileName))!,

@@ -17,8 +17,8 @@ const CATALOG_DEFAULT = 'default'
 export class CoreContext {
   config: ResolvedConfig
   hooks: Hookable<Hooks>
+  deps: Map<DepItem['id'], DepItem> = new Map()
   #payload?: CoreOptions
-  #deps: Map<DepItem['id'], DepItem> = new Map()
   #parsedConfigFile?: ParsedYAMLFile
   #parsedPackageFiles?: Map<FileItem['id'], ParsedJSONFile>
 
@@ -36,7 +36,7 @@ export class CoreContext {
     return `${name}:${value}`
   }
 
-  run(options: CoreOptions): CoreReturns {
+  async run(options: CoreOptions): Promise<CoreReturns> {
     this.#payload = options
     this.#parsedConfigFile = {
       ...options.configFile,
@@ -50,6 +50,8 @@ export class CoreContext {
     this.#generateDeps()
 
     this.#resolveCatalog()
+
+    await this.hooks.callHook('event:before:update-parsed-files', this)
 
     this.#updateParsedFiles()
 
@@ -109,18 +111,18 @@ export class CoreContext {
           }
 
           const depId = this.generateDepId({ value, name })
-          const isExsit = this.#deps?.has(depId)
+          const isExsit = this.deps?.has(depId)
           const scopedItem = {
             file: id,
             name: pkg.name!,
             type: type as DepItem['scoped'][number]['type'],
           }
           if (isExsit) {
-            this.#deps.get(depId)!.scoped.push(scopedItem)
+            this.deps.get(depId)!.scoped.push(scopedItem)
             return
           }
 
-          this.#deps.set(depId, {
+          this.deps.set(depId, {
             id: depId,
             name,
             value,
@@ -137,9 +139,9 @@ export class CoreContext {
      *
      * 移除小于指定数量的依赖
      */
-    this.#deps.forEach((dep) => {
+    this.deps.forEach((dep) => {
       if (dep.scoped.length < Number(this.config.min)) {
-        this.#deps.delete(dep.id)
+        this.deps.delete(dep.id)
       }
     })
   }
@@ -156,7 +158,7 @@ export class CoreContext {
    * 其他版本以 `名称:版本` 放入 [Named Catalogs](https://pnpm.io/catalogs#named-catalogs)
    */
   #resolveCatalog(): void {
-    const depsByName = groupBy(Array.from(this.#deps.values()), i => i.name)
+    const depsByName = groupBy(Array.from(this.deps.values()), i => i.name)
     Object.values(depsByName).filter(i => i.length > 1).forEach((_deps) => {
       const name = _deps[0]!.name
 
@@ -166,9 +168,9 @@ export class CoreContext {
 
       sortedVersions.forEach((v) => {
         const _id = this.generateDepId({ value: v, name })!
-        this.#deps.get(_id!)!.catalog = _id
+        this.deps.get(_id!)!.catalog = _id
       })
-      this.#deps.get(this.generateDepId({ value: sortedVersions.at(-1)!, name }))!.catalog = CATALOG_DEFAULT
+      this.deps.get(this.generateDepId({ value: sortedVersions.at(-1)!, name }))!.catalog = CATALOG_DEFAULT
     })
   }
 
@@ -178,7 +180,11 @@ export class CoreContext {
    * 更新配置文件和包文件的解析内容
    */
   #updateParsedFiles(): void {
-    this.#deps.forEach((dep) => {
+    this.deps.forEach((dep) => {
+      if (!dep.selected) {
+        return
+      }
+
       if (dep.catalog === CATALOG_DEFAULT) {
         this.#parsedConfigFile!.parsedContent.setIn([`catalog`, `${dep.name}`], dep.value)
       }

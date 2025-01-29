@@ -1,5 +1,6 @@
 import type { Hookable } from 'hookable'
 import type { ResolvedConfig } from './config'
+import type { CoreContext } from './context'
 import type { CoreReturns, ResolvedCoreOptions } from './core'
 import { createHooks } from 'hookable'
 
@@ -16,6 +17,7 @@ export function resolveHooks(_config: ResolvedConfig): Hookable<Hooks> {
 export interface Hooks {
   'event:core:start': (option: ResolvedCoreOptions) => void
   'event:cli:task:end': (option: ResolvedCoreOptions, res: CoreReturns) => void
+  'event:before:update-parsed-files': (ctx: CoreContext) => Promise<void>
 }
 
 export type HookKeys = keyof Hooks

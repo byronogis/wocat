@@ -14,13 +14,12 @@ const main = defineCommand({
       description: 'Current working directory',
       valueHint: 'dir',
     },
-    // TODO: add more features
-    // interactive: {
-    //   type: 'boolean',
-    //   description: 'Interactive mode',
-    //   alias: 'I',
-    //   default: false,
-    // },
+    interactive: {
+      type: 'boolean',
+      description: 'Interactive mode',
+      alias: 'I',
+      default: false,
+    },
     min: {
       type: 'string',
       description: 'Ony select dependencies greater than or equal to the specified count',
