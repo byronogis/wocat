@@ -12,7 +12,15 @@
     "url": "https://github.com/byronogis/wocat.git"
   },
   "bugs": "https://github.com/byronogis/wocat/issues",
-  "keywords": [],
+  "keywords": [
+    "pnpm",
+    "catalog",
+    "catalogs",
+    "monorepo",
+    "workspace",
+    "convert",
+    "dependencies"
+  ],
   "sideEffects": false,
   "exports": {
     ".": {

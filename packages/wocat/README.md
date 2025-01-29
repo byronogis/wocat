@@ -12,38 +12,26 @@
 
 [![JSDocs][jsdocs-src]][jsdocs-href]
 
-Convert regular dependencies to Catalogs.
-
-## Installation
-
-<!-- automd:pm-install -->
-
-```sh
-# ✨ Auto-detect
-npx nypm install wocat
-
-# npm
-npm install wocat
-
-# yarn
-yarn add wocat
-
-# pnpm
-pnpm install wocat
-
-# bun
-bun install wocat
-
-# deno
-deno install wocat
-```
-
-<!-- /automd -->
+Convert regular dependencies to [Catalogs](https://pnpm.io/catalogs).
 
 ## Basic Usage
 
-```ts
-// usage
+```bash
+npx wocat
+```
+
+## Options
+
+```bash
+USAGE wocat [OPTIONS]
+
+OPTIONS
+
+        --cwd=<dir>    Current working directory
+  -I, --interactive    Interactive mode
+      -m, --min="1"    Ony select dependencies greater than or equal to the specified count
+       -f, --filter    Filter dependencies by name, can use regular expressions
+        -w, --watch    Watch mode
 ```
 
 <!-- automd:fetch url="gh:byronogis/.github/main/snippets/readme-contrib-node-pnpm.md" -->
@@ -88,11 +76,11 @@ Made by [@byronogis](https://github.com/byronogis) and [community](https://githu
 
 ---
 
-_🤖 auto updated with [automd](https://automd.unjs.io) (last updated: Mon Jan 27 2025)_
+_🤖 auto updated with [automd](https://automd.unjs.io) (last updated: Wed Jan 29 2025)_
 
 <!-- /automd -->
 
 <!-- Badges -->
 
 [jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-1fa669
-[jsdocs-href]: https://www.jsdocs.io/package/pausable-timers
+[jsdocs-href]: https://www.jsdocs.io/package/wocat

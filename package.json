@@ -15,7 +15,7 @@
     "build:full": "turbo run build",
     "automd": "turbo run automd && pnpm run root:automd",
     "release": "bumpp -r && pnpm run -r release",
-    "root:automd": "automd --input='README*.md'",
+    "root:automd": "echo y | pnpx @atao60/fse-cli copy packages/wocat/README.md README.md",
     "root:lint": "eslint .",
     "root:lint:fix": "eslint . --fix",
     "typecheck": "turbo run typecheck",
