@@ -1,7 +1,7 @@
 {
   "name": "@wocat/core",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Core for wocat",
   "author": "Byron <byronogis@outlook.com>",
   "license": "MIT",
