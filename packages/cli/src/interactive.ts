@@ -52,7 +52,7 @@ export async function runInteractive(ctx: CoreContext): Promise<void> {
     initial: Array.from(ctx.deps.entries()).filter(([, dep]) => dep.selected).map(([id]) => id),
   }) as unknown as string[]
 
-  res.forEach((value) => {
-    ctx.deps.get(value)!.selected = true
+  ctx.deps.forEach((dep) => {
+    dep.selected = res.includes(dep.id)
   })
 }
