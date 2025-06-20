@@ -50,9 +50,10 @@ export async function runInteractive(ctx: CoreContext): Promise<void> {
       }
     }),
     initial: Array.from(ctx.deps.entries()).filter(([, dep]) => dep.selected).map(([id]) => id),
+    cancel: 'null',
   }) as unknown as string[]
 
   ctx.deps.forEach((dep) => {
-    dep.selected = res.includes(dep.id)
+    dep.selected = Boolean(res?.includes(dep.id))
   })
 }
