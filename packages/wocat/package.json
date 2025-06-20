@@ -1,7 +1,7 @@
 {
   "name": "wocat",
   "type": "module",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Convert regular dependencies to Catalogs.",
   "author": "Byron <byronogis@outlook.com>",
   "license": "MIT",
